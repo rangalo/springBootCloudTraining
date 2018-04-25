@@ -2,12 +2,14 @@ package net.boddin.clouddemo;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 @RequestMapping("demo")
 public class DemoController {
 
-    @RequestMapping("one")
+    @RequestMapping("/one")
     public Object getDemoObject(){
         String foo = "hello";
         return foo;
