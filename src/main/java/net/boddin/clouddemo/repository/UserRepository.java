@@ -10,4 +10,6 @@ public interface UserRepository  extends CrudRepository<User,Integer> {
 
     Collection<User> findAllByFirstNameLike(@Param("value") String value);
 
+    User findUserByUsername(String username);
+
 }
