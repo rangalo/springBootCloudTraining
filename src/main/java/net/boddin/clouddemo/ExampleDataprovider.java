@@ -1,28 +1,48 @@
 package net.boddin.clouddemo;
 
+import net.boddin.clouddemo.entity.Role;
 import net.boddin.clouddemo.entity.User;
+import net.boddin.clouddemo.repository.RoleRepository;
 import net.boddin.clouddemo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ExampleDataprovider implements ApplicationRunner {
 
     private final UserRepository repository;
+    private final RoleRepository roleRepository;
+
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public ExampleDataprovider(UserRepository repository) {
+    public ExampleDataprovider(UserRepository repository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
         this.repository = repository;
+        this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
     public void run(ApplicationArguments applicationArguments) {
-        repository.save(new User("John", "Wick"));
-        repository.save(new User("Mister", "Miagi"));
-        repository.save(new User("Tyler", "Durden"));
-        repository.save(new User("Denny", "Crane"));
-        repository.save(new User("Sheldon", "Cooper"));
+        Role userRole = new Role("USER");
+        Role adminRole = new Role("ADMINISTRATOR");
+
+        userRole = roleRepository.save(userRole);
+        adminRole = roleRepository.save(adminRole);
+
+        User user = new User("user", "user");
+        user.setUsername("user");
+        user.setPassword(passwordEncoder.encode("user"));
+        user.getRoles().add(userRole);
+        repository.save(user);
+        User admin = new User("admin", "admin");
+        admin.setUsername("admin");
+        admin.setPassword(passwordEncoder.encode("admin"));
+        admin.getRoles().add(userRole);
+        admin.getRoles().add(adminRole);
+        repository.save(admin);
     }
 }

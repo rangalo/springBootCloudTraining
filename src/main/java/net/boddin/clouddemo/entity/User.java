@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 
 @Entity(name = "User")
@@ -47,7 +48,7 @@ public class User implements UserDetails {
     private String password;
 
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "User_Role",
             joinColumns = {@JoinColumn(name = "user_id")},
@@ -61,6 +62,7 @@ public class User implements UserDetails {
     public User(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
+        this.roles = new ArrayList<>();
     }
 
     public int getId() {
